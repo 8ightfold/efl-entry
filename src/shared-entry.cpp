@@ -23,5 +23,17 @@
 #include <efl/Config.hpp>
 
 #ifdef PLATFORM_WINDOWS
+#  include <WinDef.h>
+#  include <process.h>
+
+namespace efl::entry {
+    inline HINSTANCE current_module_ = nullptr;
+} // namespace efl::entry
+
+BOOL WINAPI DllMain(HINSTANCE mod, DWORD reason, LPVOID) {
+    if(reason == DLL_PROCESS_ATTACH)
+        efl::entry::current_module_ = mod;
+    return TRUE;
+}
 
 #endif // Windows Check
