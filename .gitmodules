@@ -1,0 +1,3 @@
+[submodule "submodules/efl-config"]
+	path = submodules/efl-config
+	url = https://github.com/8ightfold/efl-config
