@@ -11,8 +11,7 @@ target_compile_definitions(__efl_entry_main PUBLIC EFLI_SHARED_=0)
 target_link_libraries(__efl_entry_main PUBLIC __efl_entry_api)
 
 if(__EFL_VALID_ENTRY)
-  target_compile_definitions(__efl_entry_main PUBLIC 
-    EFL_ENTRYPOINT=${EFL_ENTRY} EFLI_ENTRY_GLOBAL_=1)
+  target_compile_definitions(__efl_entry_main PUBLIC EFLI_ENTRY_GLOBAL_=1)
 endif()
 
 if(EFL_ENTRY_STRONG)
