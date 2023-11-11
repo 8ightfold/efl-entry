@@ -92,13 +92,14 @@ This will only occur on GNU/llvm compilers.
 ### Custom Entry Functions
 
 Defining a custom entry point is simple:
-just set ``EFL_ENTRY`` before adding ``efl::entry``.
+just call ``Efl_TargetAddentry`` on your target.
 
 This will define ``EFL_ENTRYPOINT`` as ``my_main``:
 
 ```cmake
-set(EFL_ENTRY "my_main")
 add_subdirectory(efl-entry)
+...
+Efl_TargetAddentry(tgt VISIBILITY my_main)
 ```
 
 You can also use names that would be impossible in
@@ -109,8 +110,9 @@ This will define ``EFL_ENTRYPOINT`` as ``entry_func``:
 
 ```cmake
 set(EFL_PERMISSIVE_NAMING ON)
-set(EFL_ENTRY "entry-func")
 add_subdirectory(efl-entry)
+...
+Efl_TargetAddentry(tgt VISIBILITY "entry-func")
 ```
 
 ### Entry Function Linkage
