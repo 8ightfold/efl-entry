@@ -12,10 +12,6 @@ target_link_libraries(__efl_entry_main PUBLIC __efl_entry_api)
 
 set(ENV{__EFL_ENTRY_SRC} ${PROJECT_SOURCE_DIR}/src)
 
-if(__EFL_VALID_ENTRY)
-  target_compile_definitions(__efl_entry_main PUBLIC EFLI_ENTRY_GLOBAL_=1)
-endif()
-
 if(EFL_ENTRY_STRONG)
   target_compile_definitions(__efl_entry_main PRIVATE
     EFLI_ENTRY_STRONG_=1)
