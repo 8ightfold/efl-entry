@@ -27,11 +27,9 @@
 #include <filesystem>
 #include <efl/Config.hpp>
 
-#define EFL_ENTRY_VERSION "1.0.0"
-
 #if !CPPVER_LEAST(17)
 #  error efl::entry requires at least C++17. \
-         Required: std::filesystem, std::string_view
+    Required: std::filesystem, std::string_view
 #endif // C++17 Check
 
 #ifndef EFL_ENTRYPOINT
@@ -44,46 +42,46 @@
 
 //=== Inclusions ===//
 namespace efl {
-    namespace fs = std::filesystem;
-    using Path = fs::path;
+  namespace fs = std::filesystem;
+  using Path = fs::path;
 } // namespace efl
 
 //=== Implementation ===//
 namespace efl::entry {
-    struct ProgramArgSpan {
-        ProgramArgSpan(char* argv[]) : argv_(argv) {
-            while(argv[argc_]) ++argc_;
-        }
+  struct ProgramArgSpan {
+    ProgramArgSpan(char* argv[]) : argv_(argv) {
+      while(argv[argc_]) ++argc_;
+    }
 
-        ProgramArgSpan(char** beg_, char** end_) : argv_(beg_) {
-            argc_ = static_cast<int>(end_ - beg_);
-        }
+    ProgramArgSpan(char** beg_, char** end_) : argv_(beg_) {
+      argc_ = static_cast<int>(end_ - beg_);
+    }
 
-        ProgramArgSpan(int argc, char* argv[]) 
-          : argc_(argc), argv_(argv) { }
-    
-    public:
-        int size() CNOEXCEPT { return argc_; }
-        char** begin() CNOEXCEPT { return argv_; }
-        char** end() CNOEXCEPT { return argv_ + argc_; }
+    ProgramArgSpan(int argc, char* argv[]) 
+     : argc_(argc), argv_(argv) { }
+  
+  public:
+    int size() CNOEXCEPT { return argc_; }
+    char** begin() CNOEXCEPT { return argv_; }
+    char** end() CNOEXCEPT { return argv_ + argc_; }
 
-        char* operator[](std::size_t n) CNOEXCEPT {
-            if(n < argc_) LIKELY return argv_[n];
-            else UNLIKELY return nullptr;
-        }
+    char* operator[](std::size_t n) CNOEXCEPT {
+      if(n < argc_) LIKELY return argv_[n];
+      else UNLIKELY return nullptr;
+    }
 
-    private:
-        int argc_ = 0;
-        mutable char** argv_;
-    };
+  private:
+    int argc_ = 0;
+    mutable char** argv_;
+  };
 } // namespace efl::entry
 
 //=== Definitions ===//
 namespace efl {
-    struct ProgramArgs {
-        Path program_path;
-        entry::ProgramArgSpan& args;
-    };
+  struct ProgramArgs {
+    Path program_path;
+    entry::ProgramArgSpan& args;
+  };
 } // namespace efl
 
 #endif // EFL_ENTRY_HPP

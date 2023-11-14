@@ -7,7 +7,7 @@ macro(Efl_TargetAddentry __tgt __vis)
   endif()
   
   if(__EFL_VALID_ENTRY)
-    add_library(${__tgt}-entry STATIC $ENV{__EFL_ENTRY_SRC}/main-entry.cpp)
+    add_library(${__tgt}-entry STATIC $ENV{__EFL_ENTRY_SRC}/EntryMain.cpp)
     target_compile_definitions(${__tgt}-entry PUBLIC EFLI_SHARED_=0)
     target_link_libraries(${__tgt}-entry PUBLIC __efl_entry_api)
     target_compile_definitions(${__tgt}-entry PUBLIC EFL_ENTRYPOINT=${__EFL_ENTRY})

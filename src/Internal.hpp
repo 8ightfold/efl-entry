@@ -1,4 +1,4 @@
-//===- main-internal.hpp --------------------------------------------===//
+//===- Internal.hpp -------------------------------------------------===//
 //
 // Copyright (C) 2023 Eightfold
 //
@@ -16,14 +16,14 @@
 //
 //===----------------------------------------------------------------===//
 //
-//  This file provides the definitions required for main-entry.
+//  This file provides the definitions required for EntryMain.
 //
 //===----------------------------------------------------------------===//
 
-#ifdef EFLI_MAIN_INTERNAL_HPP
+#ifdef EFLI_ENTRY_INTERNAL_HPP
 #  error "main-internal.hpp" can only be included once.
 #else
-#  define EFLI_MAIN_INTERNAL_HPP
+#  define EFLI_ENTRY_INTERNAL_HPP
 #endif
 
 #include <efl/Entry.hpp>
@@ -52,29 +52,29 @@
 #endif
 
 namespace {
-    char* efl_win_utf8conv(wchar_t* ws) {
-#   ifdef EFLI_ENTRY_WIDE_
-        int len = wcslen(ws);
-        int to_alloc = WideCharToMultiByte(
-          CP_UTF8, 0, ws, len + 1, NULL, 0, NULL, NULL);
-        if(to_alloc <= 0) return nullptr;
+  char* winUTF8Conv(wchar_t* ws) {
+# ifdef EFLI_ENTRY_WIDE_
+    int len = wcslen(ws);
+    int to_alloc = WideCharToMultiByte(
+      CP_UTF8, 0, ws, len + 1, NULL, 0, NULL, NULL);
+    if(to_alloc <= 0) return nullptr;
 
-        char* data = new char[to_alloc];
-        if(WideCharToMultiByte(
-          CP_UTF8, 0, ws, len + 1, data, to_alloc, NULL, NULL) <= 0) {
-            delete[] data;
-            return nullptr;
-        }
-        
-        return data;
-#   else
-        (void) ws;
-        UNREACHABLE();
-#   endif
+    char* data = new char[to_alloc];
+    if(WideCharToMultiByte(
+      CP_UTF8, 0, ws, len + 1, data, to_alloc, NULL, NULL) <= 0) {
+        delete[] data;
+        return nullptr;
     }
+    
+    return data;
+# else
+    (void) ws;
+    UNREACHABLE();
+# endif
+  }
 
-    namespace efl::entry {
-        constexpr const char entrypoint_str_[] = 
-            STRINGIFY(EFL_ENTRYPOINT);
-    } // namespace efl::entry
+  namespace efl::entry {
+    GLOBAL const char entrypoint_str_[] = 
+      STRINGIFY(EFL_ENTRYPOINT);
+  } // namespace efl::entry
 } // namespace `anonymous`

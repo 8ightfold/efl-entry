@@ -1,4 +1,4 @@
-//===- main-entry.cpp -----------------------------------------------===//
+//===- EntryMain.cpp ------------------------------------------------===//
 //
 // Copyright (C) 2023 Eightfold
 //
@@ -21,7 +21,7 @@
 //===----------------------------------------------------------------===//
 
 #include <cstdio>
-#include "main-internal.hpp"
+#include "Internal.hpp"
 
 using GPath = ::efl::Path;
 using GProgramArgs = ::efl::ProgramArgs;
@@ -30,44 +30,46 @@ using GProgramArgSpan = ::efl::entry::ProgramArgSpan;
 int EFLI_WEAK_ EFL_ENTRYPOINT(const GProgramArgs& pargs);
 
 namespace {
-    int invoke_entry_(const GProgramArgs& pargs) {
-#   ifndef EFLI_NOWEAK_
-        if(EFL_ENTRYPOINT == nullptr) {
-            std::fprintf(stderr, 
-                "[FATAL] entry-point `%s` is undefined.\n",
-                efl::entry::entrypoint_str_);
-            fflush(stderr);
-            return -1;
-        }
-#   endif // Weak Linkage Check
-        return EFL_ENTRYPOINT(pargs);
+  int invoke_entry_(const GProgramArgs& pargs) {
+# ifndef EFLI_NOWEAK_
+    if(EFL_ENTRYPOINT == nullptr) {
+      std::fprintf(stderr, 
+        "[FATAL] entry-point `%s` is undefined.\n",
+        efl::entry::entrypoint_str_);
+      fflush(stderr);
+      return -1;
     }
+# endif // Weak Linkage Check
+    return EFL_ENTRYPOINT(pargs);
+  }
 
-    int main_(int argc, char* argv[]) {
-        GPath program_path = argc ? *argv : "";
-        GProgramArgSpan args { argv + 1, argv + argc };
-        const GProgramArgs pargs { program_path, args };
-        return invoke_entry_(pargs);
-    }
+  int main_(int argc, char* argv[]) {
+    GPath program_path = argc ? *argv : "";
+    GProgramArgSpan args { argv + 1, argv + argc };
+    const GProgramArgs pargs { program_path, args };
+    return invoke_entry_(pargs);
+  }
 } // namespace `anonymous`
 
 
 #ifndef EFLI_ENTRY_WIDE_
   int main(int c, char* v[]) { 
-      return main_(c, v); 
+    return main_(c, v); 
   }
 #else
-#  include <vector>
+# include <vector>
 
   int wmain(int c, wchar_t* wv[]) {
-      std::vector<char*> v;
-      v.reserve(c)
-      if(c > 0) 
-        for(wchar_t** wargs = wv; *wv; ++wv) {
-          char* arg = efl_win_utf8conv(*wv);
-          if(arg) v.push_back(arg);
-      }
-      v.push_back(nullptr);
-      return main_(c, v.data());
+    std::vector<char*> v;
+    v.reserve(c)
+    if(c > 0) 
+      for(wchar_t** wargs = wv; *wv; ++wv) {
+        char* arg = winUTF8Conv(*wv);
+        if(arg) v.push_back(arg);
+    }
+    v.push_back(nullptr);
+    int ret = main_(c, v.data());
+    for(char* s : v) delete s;
+    return ret;
   }
 #endif
